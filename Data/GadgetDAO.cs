@@ -48,6 +48,8 @@ namespace BondGadgetsList.Data
         }
 
         public GadgetModel FetchOne(int id)
+
+
         {
            
 
@@ -56,7 +58,7 @@ namespace BondGadgetsList.Data
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sqlQuery = "SELECT * FROM dbo.Gadgets WHERE Id = @id";
-                //associate @id with the parameter Id
+                //associate @id with the parameter Id...
 
                 SqlCommand command = new SqlCommand(sqlQuery, connection);
                 command.Parameters.Add("@Id", System.Data.SqlDbType.Int).Value = id;
@@ -85,6 +87,50 @@ namespace BondGadgetsList.Data
            
 
         }
+
+
+        // create one
+
+        public int Create(GadgetModel gadgetModel)
+
+
+        {
+
+
+            // access the database
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sqlQuery = "INSERT INTO dbo.Gadgets Values(@Name, @Description, @AppearsIn, @WithThisActor)";
+                
+
+                SqlCommand command = new SqlCommand(sqlQuery, connection);
+                command.Parameters.Add("@Name", System.Data.SqlDbType.VarChar, 1000).Value = gadgetModel.Name;
+                command.Parameters.Add("@Description", System.Data.SqlDbType.VarChar, 1000).Value = gadgetModel.Description;
+                command.Parameters.Add("@AppearsIn", System.Data.SqlDbType.VarChar, 1000).Value = gadgetModel.AppearsIn;
+                command.Parameters.Add("@WithThisActor", System.Data.SqlDbType.VarChar, 1000).Value = gadgetModel.WithThisActor;
+
+                connection.Open();
+                int newID = command.ExecuteNonQuery();
+               
+                return newID;
+            }
+
+
+
+        }
+
+
+        // delete one
+
+
+        //update one
+
+
+        //search for name 
+
+
+        //search for discription
 
     }
 }
