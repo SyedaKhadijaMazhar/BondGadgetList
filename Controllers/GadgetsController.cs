@@ -47,11 +47,19 @@ namespace BondGadgetsList.Controllers
             return View("GadgetForm");
         }
 
+        public ActionResult Edit(int id)
+        {
+            GadgetDAO gadgetDAO = new GadgetDAO();
+            GadgetModel gadget = gadgetDAO.FetchOne(id);
+
+            return View("GadgetForm", gadget);
+        }
+
         public ActionResult ProcessCreate(GadgetModel gadgetModel)
         {
             // save to the db
             GadgetDAO gadgetDAO = new GadgetDAO();
-             gadgetDAO.Create(gadgetModel);
+            gadgetDAO.CreateOrUpdate(gadgetModel);
             return View("Details", gadgetModel);
         }
     }
