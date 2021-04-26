@@ -55,12 +55,46 @@ namespace BondGadgetsList.Controllers
             return View("GadgetForm", gadget);
         }
 
+        public ActionResult Delete(int id)
+        {
+            GadgetDAO gadgetDAO = new GadgetDAO();
+            gadgetDAO.Delete(id);
+
+            List<GadgetModel> gadget = gadgetDAO.FetchAll();
+
+            return View("Index", gadget);
+        }
+
         public ActionResult ProcessCreate(GadgetModel gadgetModel)
         {
             // save to the db
             GadgetDAO gadgetDAO = new GadgetDAO();
             gadgetDAO.CreateOrUpdate(gadgetModel);
             return View("Details", gadgetModel);
+        }
+
+        public ActionResult SearchForm()
+        {
+            return View("SearchForm");
+        }
+
+        public ActionResult SearchForName(string searchPhrase)
+        {
+            // get a list of search results from the database
+
+            GadgetDAO gadgetDAO = new GadgetDAO();
+
+            List<GadgetModel> searchResults = gadgetDAO.SearchForName(searchPhrase);
+            return View("Index", searchResults  );
+        }
+        public ActionResult SearchForDescription(string searchPhrase)
+        {
+            // get a list of search results from the database
+
+            GadgetDAO gadgetDAO = new GadgetDAO();
+
+            List<GadgetModel> searchResults = gadgetDAO.SearchForDescription(searchPhrase);
+            return View("Index", searchResults);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BondGadgetsList.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 
@@ -47,6 +48,29 @@ namespace BondGadgetsList.Data
 
         }
 
+        internal int Delete(int id)
+        {
+            // access the database
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+               
+                 string   sqlQuery = "DELETE FROM  dbo.Gadgets WHERE Id = @Id";
+               
+
+
+                SqlCommand command = new SqlCommand(sqlQuery, connection);
+                command.Parameters.Add("@Id", System.Data.SqlDbType.VarChar, 1000).Value = id;
+              
+
+                connection.Open();
+                int deletedID = command.ExecuteNonQuery();
+
+                return deletedID;
+            }
+
+        }
+
         public GadgetModel FetchOne(int id)
 
 
@@ -86,6 +110,42 @@ namespace BondGadgetsList.Data
 
            
 
+        }
+
+        internal List<GadgetModel> SearchForName(string searchPhrase)
+        {
+            List<GadgetModel> returnList = new List<GadgetModel>();
+
+            // access the database
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sqlQuery = "SELECT * FROM dbo.Gadgets WHERE NAME LIKE @searchForMe";
+               
+
+                SqlCommand command = new SqlCommand(sqlQuery, connection);
+                command.Parameters.Add("@searchForMe", System.Data.SqlDbType.NVarChar).Value = "%" + searchPhrase + "%";
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        // create a single new obj. Add it to the list to return.
+                        GadgetModel gadget = new GadgetModel();
+                        gadget.Id = reader.GetInt32(0);
+                        gadget.Name = reader.GetString(1);
+                        gadget.Description = reader.GetString(2);
+                        gadget.AppearsIn = reader.GetString(3);
+                        gadget.WithThisActor = reader.GetString(4);
+                        returnList.Add(gadget);
+                    }
+                }
+            }
+
+            return returnList;
         }
 
 
@@ -144,6 +204,40 @@ namespace BondGadgetsList.Data
 
 
         //search for discription
+        internal List<GadgetModel> SearchForDescription(string searchPhrase)
+        {
+            List<GadgetModel> returnList = new List<GadgetModel>();
 
+            // access the database
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sqlQuery = "SELECT * FROM dbo.Gadgets WHERE DESCRIPTION LIKE @searchForMe";
+
+
+                SqlCommand command = new SqlCommand(sqlQuery, connection);
+                command.Parameters.Add("@searchForMe", System.Data.SqlDbType.NVarChar).Value = "%" + searchPhrase + "%";
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        // create a single new obj. Add it to the list to return.
+                        GadgetModel gadget = new GadgetModel();
+                        gadget.Id = reader.GetInt32(0);
+                        gadget.Name = reader.GetString(1);
+                        gadget.Description = reader.GetString(2);
+                        gadget.AppearsIn = reader.GetString(3);
+                        gadget.WithThisActor = reader.GetString(4);
+                        returnList.Add(gadget);
+                    }
+                }
+            }
+
+            return returnList;
+        }
     }
 }
